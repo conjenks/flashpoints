@@ -1,6 +1,6 @@
 using System;
 
-namespace WebApplication2.Models
+namespace FlashPoints.Models
 {
     public class ErrorViewModel
     {
