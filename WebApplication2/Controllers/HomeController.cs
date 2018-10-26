@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using FlashPoints.Models;
 
-namespace WebApplication2.Controllers
+namespace FlashPoints.Controllers
 {
     [Authorize]
     public class HomeController : Controller

@@ -16,7 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace WebApplication2
+namespace FlashPoints
 {
     public class Startup
     {

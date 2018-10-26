@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using FlashPoints.Data;
 using FlashPoints.Models;
 
-namespace WebApplication2.Controllers
+namespace FlashPoints.Controllers
 {
     public class UsersController : Controller
     {
