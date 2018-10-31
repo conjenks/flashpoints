@@ -8,6 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using FlashPoints.Data;
 using FlashPoints.Models;
 
+using QRCoder;
+using System.IO;
+using System.Drawing;
+using System.Drawing.Imaging;
+
 namespace FlashPoints.Controllers
 {
     public class EventsController : Controller
@@ -38,6 +43,20 @@ namespace FlashPoints.Controllers
             if (@event == null)
             {
                 return NotFound();
+            }
+
+            string qrcode = @event.Title + @event.Location + @event.ID;
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                QRCodeGenerator qrGenerator = new QRCodeGenerator();
+                QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrcode, QRCodeGenerator.ECCLevel.Q);
+                QRCode qrCode = new QRCode(qrCodeData);
+                using (Bitmap bitMap = qrCode.GetGraphic(20))
+                {
+                    bitMap.Save(ms, ImageFormat.Png);
+                    ViewBag.QRCodeImage = "data:image/png;base64," + Convert.ToBase64String(ms.ToArray());
+                }
             }
 
             return View(@event);
