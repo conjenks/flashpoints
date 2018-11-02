@@ -6,8 +6,14 @@
 <p>Select an option from above.</p>
 <br />
 
-@if  (ViewBag.isAdmin == "true")
+@if (ViewBag.isAdmin == "true")
 {
     <h3>Administrator Console</h3>
-    <a asp-controller="Users" asp-action="Index">User Management</a>
+    <a asp-controller="Events" asp-action="Create">Add Event to Calendar</a>
+    <br />
+    <a asp-controller="Events" asp-action="Index">Approve Student Event Requests</a>
+    <br />
+    <a asp-controller="Users" asp-action="Index">Manage Users</a>
+    <br />
+    <a asp-controller="Prizes" asp-action="Index">Manage Prize Catalog</a>
 }

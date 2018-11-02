@@ -49,6 +49,32 @@ namespace FlashPoints.Controllers
                 return NotFound();
             }
 
+            
+
+            var user = _context.User.Where(u => u.Email == User.Identity.Name);
+            if (user.First().IsAdmin == true)
+            {
+                ViewBag.isAdmin = true;
+            }
+
+            return View(@event);
+        }
+
+        [Authorize(Policy = "Administrator")]
+        public async Task<IActionResult> QRCode(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var @event = await _context.Event
+                .FirstOrDefaultAsync(m => m.ID == id);
+            if (@event == null)
+            {
+                return NotFound();
+            }
+
             string qrcode = @event.Title + @event.Location + @event.ID;
 
             using (MemoryStream ms = new MemoryStream())
@@ -64,6 +90,7 @@ namespace FlashPoints.Controllers
             }
 
             return View(@event);
+
         }
 
         // GET: Events/Create

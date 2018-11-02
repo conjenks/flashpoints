@@ -29,7 +29,14 @@
     </div>
 </div>
 
+@if (ViewBag.currentFilter == null)
+{
+    <h4>All Users</h4>
+}
+else
+{
 <h4>@ViewBag.currentFilter</h4>
+}
 
 <table class="table">
     <thead>
