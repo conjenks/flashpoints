@@ -12,9 +12,12 @@ using QRCoder;
 using System.IO;
 using System.Drawing;
 using System.Drawing.Imaging;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace FlashPoints.Controllers
 {
+    [Authorize]
     public class EventsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -27,6 +30,7 @@ namespace FlashPoints.Controllers
         // GET: Events
         public async Task<IActionResult> Index()
         {
+            AddUserIfNotExists(User.Identity.Name);
             return View(await _context.Event.ToListAsync());
         }
 
@@ -168,5 +172,21 @@ namespace FlashPoints.Controllers
         {
             return _context.Event.Any(e => e.ID == id);
         }
+        public void AddUserIfNotExists(string email)
+        {
+            var query = _context.User.Where(e => e.Email == email);
+
+            if (query.Count() == 0)
+            {
+                
+                User newUser = new User();
+                newUser.FirstName = User.FindFirst(ClaimTypes.GivenName).Value;
+                newUser.LastName = User.FindFirst(ClaimTypes.Surname).Value;
+                newUser.Email = email;
+                _context.User.Add(newUser);
+                _context.SaveChanges();
+            }
+        }
+
     }
 }

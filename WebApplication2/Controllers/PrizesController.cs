@@ -7,9 +7,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FlashPoints.Data;
 using FlashPoints.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace FlashPoints.Controllers
 {
+    [Authorize]
     public class PrizesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -22,6 +25,7 @@ namespace FlashPoints.Controllers
         // GET: Prizes
         public async Task<IActionResult> Index()
         {
+            AddUserIfNotExists(User.Identity.Name);
             return View(await _context.Prize.ToListAsync());
         }
 
@@ -148,6 +152,20 @@ namespace FlashPoints.Controllers
         private bool PrizeExists(int id)
         {
             return _context.Prize.Any(e => e.ID == id);
+        }
+
+        public void AddUserIfNotExists(string email)
+        {
+            var query = _context.User.Where(e => e.Email == email);
+            if (query.Count() == 0)
+            {
+                User newUser = new User();
+                newUser.FirstName = User.FindFirst(ClaimTypes.GivenName).Value;
+                newUser.LastName = User.FindFirst(ClaimTypes.Surname).Value;
+                newUser.Email = email;
+                _context.User.Add(newUser);
+                _context.SaveChanges();
+            }
         }
     }
 }

@@ -2,4 +2,12 @@
     ViewData["Title"] = "Home Page";
 }
 <br />
+
 <p>Select an option from above.</p>
+<br />
+
+@if  (ViewBag.isAdmin == "true")
+{
+    <h3>Administrator Console</h3>
+    <a asp-controller="Users" asp-action="Index">User Management</a>
+}

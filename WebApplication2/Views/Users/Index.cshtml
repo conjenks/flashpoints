@@ -1,14 +1,36 @@
 ﻿@model IEnumerable<FlashPoints.Models.User>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "User Management";
 }
 
-<h2>Index</h2>
+<h2>User Management</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<div class="row">
+    <div class="col-sm-6">
+        @using (Html.BeginForm())
+        {
+        <p>
+            <strong style="margin: 5px">Email or Name: </strong>@Html.TextBox("SearchString", ViewBag.SearchString as string)
+            <input type="submit" value="Search All" class="btn btn-sm btn-default" style="margin: 8px"/>
+        </p>
+        }
+    </div>
+    <div class="col-sm-2"></div>
+    <div class="col-sm-4">
+        <div class="btn-group">
+            @Html.ActionLink("All Users", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = "All Users" }, new { @class = "btn btn-primary btn-large" }
+                       )
+            @Html.ActionLink("Students", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = "Students" }, new { @class = "btn btn-primary btn-large" }
+                       )
+            @Html.ActionLink("Administrators", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = "Administrators" }, new { @class = "btn btn-primary btn-large" }
+                       )
+        </div>
+    </div>
+</div>
+
+<h4>@ViewBag.currentFilter</h4>
+
 <table class="table">
     <thead>
         <tr>
@@ -16,25 +38,19 @@
                 @Html.DisplayNameFor(model => model.Email)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.FirstName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LastName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsAdmin)
+                Name
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Points)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EventsAttendedIDs)
+                Events Attended
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PrizesRedeemedIDs)
+                Prizes Redeemed
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EventsCreatedIDs)
+                Events Created
             </th>
             <th></th>
         </tr>
@@ -46,13 +62,7 @@
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsAdmin)
+                @Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.LastName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Points)
