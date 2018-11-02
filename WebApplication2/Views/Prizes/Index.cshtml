@@ -1,4 +1,4 @@
-﻿@model IEnumerable<FlashPoints.Models.Prize>
+﻿@model List<FlashPoints.Models.Prize>
 
 @{
     ViewData["Title"] = "Index";
@@ -10,7 +10,6 @@
     <a asp-action="Create">Create New</a>
 </p>
 
-@{int counter = 0; }
 @foreach (var item in Model)
 {
     <div class="row">
@@ -18,8 +17,18 @@
             <h3>@item.Title</h3>
             <a asp-action="Details" asp-route-id="@item.ID" class="text-center"><img src="~/images/prizes/@item.ImagePath" class="center-block img-responsive" /></a>
             <br />
-            <p><strong>@item.PointPrice Points</strong></p>
+            <div class="row">
+                <div class="col-sm-4">
+                    <p><strong>@item.PointPrice Points</strong></p>
+                </div>
+                <div class="col-sm-4">
+                    <p>  </p>
+                </div>
+                <div class="col-sm-4">
+                    <p style="color:red"><strong>Not yet redeemed</strong></p>
+                </div>
+            </div>
+
         </div>
     </div>
-
 }
