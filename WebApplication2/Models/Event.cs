@@ -17,5 +17,7 @@ namespace FlashPoints.Models
         public string Creator { get; set; }
         public string Location { get; set; }
         public int NumberAttended { get; set; }
+        
+        public ICollection<EventAttended> EventsAttended { get; set; }
     }
 }

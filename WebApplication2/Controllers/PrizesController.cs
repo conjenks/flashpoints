@@ -26,11 +26,74 @@ namespace FlashPoints.Controllers
         public async Task<IActionResult> Index()
         {
             AddUserIfNotExists(User.Identity.Name);
-            return View(await _context.Prize.ToListAsync());
+
+            PrizeIndexViewModel mod = new PrizeIndexViewModel();
+
+            mod.user = _context.User.Where(u => u.Email == User.Identity.Name)
+                .Include(p => p.PrizesRedeemed)
+                .First();
+
+            mod.prizes = await _context.Prize
+                .Include(p => p.PrizesRedeemed)
+                .ToListAsync();
+
+            return View(mod);
         }
 
         // GET: Prizes/Details/5
         public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            
+            var prize = await _context.Prize
+                .Include(p => p.PrizesRedeemed)
+                .FirstOrDefaultAsync(m => m.ID == id);
+            if (prize == null)
+            {
+                return NotFound();
+            }
+
+            var user = _context.User.Where(u => u.Email == User.Identity.Name)
+                .Include(p => p.PrizesRedeemed)
+                .First();
+
+            PrizeRedeemed rdm;
+
+            try
+            {
+                rdm = user.PrizesRedeemed.Where(p => p.PrizeID == prize.ID).First();
+            } catch
+            {
+                rdm = null;
+            }
+
+            if (rdm == null)
+            {
+                ViewBag.redeemed = false;
+            } else
+            {
+                ViewBag.redeemed = true;
+            }
+
+            
+            if (user.Points < prize.PointPrice)
+            {
+                ViewBag.redeemable = false;
+            } else
+            {
+                ViewBag.redeemable = true;
+            }
+
+            ViewBag.userPoints = user.Points;
+
+            return View(prize);
+        }
+
+        // POST: Prizes/RedeemPrize/5
+        public async Task<IActionResult> RedeemPrize(int? id)
         {
             if (id == null)
             {
@@ -44,7 +107,21 @@ namespace FlashPoints.Controllers
                 return NotFound();
             }
 
-            return View(prize);
+            var user = _context.User.Where(u => u.Email == User.Identity.Name)
+                .Include(u => u.PrizesRedeemed)
+                .First();
+
+            if (user.Points >= prize.PointPrice)
+            {
+                user.PrizesRedeemed.Add(new PrizeRedeemed
+                {
+                    User = user,
+                    Prize = prize
+                });
+                _context.SaveChanges();
+            }
+            
+            return RedirectToAction("Details", new { id = prize.ID });
         }
 
         // GET: Prizes/Create
@@ -62,6 +139,7 @@ namespace FlashPoints.Controllers
         {
             if (ModelState.IsValid)
             {
+                prize.PrizesRedeemed = new List<PrizeRedeemed>();
                 _context.Add(prize);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -163,6 +241,8 @@ namespace FlashPoints.Controllers
                 newUser.FirstName = User.FindFirst(ClaimTypes.GivenName).Value;
                 newUser.LastName = User.FindFirst(ClaimTypes.Surname).Value;
                 newUser.Email = email;
+                newUser.PrizesRedeemed = new List<PrizeRedeemed>();
+                newUser.EventsAttended = new List<EventAttended>();
                 _context.User.Add(newUser);
                 _context.SaveChanges();
             }

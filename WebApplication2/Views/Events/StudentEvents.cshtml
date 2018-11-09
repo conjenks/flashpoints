@@ -1,19 +1,19 @@
 ﻿@model IEnumerable<FlashPoints.Models.Event>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Student Event Requests";
 }
 
-<h2>Upcoming Event Calendar</h2>
+<h2>Student Event Requests</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                Event
+                Submitted By
+            </th>
+            <th>
+                Event Title
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Location)
@@ -28,12 +28,16 @@
                 Points
             </th>
 
+
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Creator)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
@@ -50,8 +54,18 @@
                 @Html.DisplayFor(modelItem => item.PointValue)
             </td>
 
+
             <td>
-                <a asp-action="Details" asp-route-id="@item.ID">Details</a>
+                <form asp-action="ApproveEvent" asp-route-id="@item.ID">
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-success" value="Approve" />
+                    </div>
+                </form>
+                <form asp-action="Delete" asp-route-id="@item.ID">
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-danger" value="Deny" />
+                    </div>
+                </form>
             </td>
         </tr>
 }

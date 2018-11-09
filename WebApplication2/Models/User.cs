@@ -21,5 +21,24 @@ namespace FlashPoints.Models
         public string PrizesRedeemedIDs { get; set; }
 
         public string EventsCreatedIDs { get; set; }
+
+        public ICollection<PrizeRedeemed> PrizesRedeemed { get; set; }
+        public ICollection<EventAttended> EventsAttended { get; set; }
+    }
+
+    public class PrizeRedeemed
+    {
+        public int UserID { get; set; }
+        public User User { get; set; }
+        public int PrizeID { get; set; }
+        public Prize Prize { get; set; }
+    }
+
+    public class EventAttended
+    {
+        public int UserID { get; set; }
+        public User User { get; set; }
+        public int EventID { get; set; }
+        public Event Event { get; set; }
     }
 }

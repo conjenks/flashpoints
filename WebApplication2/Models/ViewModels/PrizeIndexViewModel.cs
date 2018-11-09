@@ -7,7 +7,7 @@ namespace FlashPoints.Models
 {
     public class PrizeIndexViewModel
     {
-        public List<Prize> List1 { get; set; }
-        public List<Prize> List2 { get; set; }
+        public User user { get; set; }
+        public List<Prize> prizes { get; set; }
     }
 }

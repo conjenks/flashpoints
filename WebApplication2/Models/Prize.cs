@@ -16,5 +16,7 @@ namespace FlashPoints.Models
         public int CurrentInventory { get; set; }
         public string Location { get; set; }
         public float ActualCost { get; set; }
+
+        public ICollection<PrizeRedeemed> PrizesRedeemed { get; set; }
     }
 }

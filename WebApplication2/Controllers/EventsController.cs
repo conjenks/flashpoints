@@ -31,7 +31,40 @@ namespace FlashPoints.Controllers
         public async Task<IActionResult> Index()
         {
             AddUserIfNotExists(User.Identity.Name);
-            return View(await _context.Event.ToListAsync());
+            var events = await _context.Event.Where(e => e.Approved == true)
+                .OrderBy(e => e.StartDateTime)
+                .ToListAsync();
+            return View(events);
+        }
+
+        // GET: Events
+        [Authorize(Policy = "Administrator")]
+        public async Task<IActionResult> StudentEvents()
+        {
+            AddUserIfNotExists(User.Identity.Name);
+            var events = await _context.Event.Where(e => e.Approved != true)
+                .OrderBy(e => e.StartDateTime)
+                .ToListAsync();
+            return View(events);
+        }
+
+        public async Task<IActionResult> ApproveEvent(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var @event = await _context.Event
+                .FirstOrDefaultAsync(m => m.ID == id);
+            if (@event == null)
+            {
+                return NotFound();
+            }
+
+            @event.Approved = true;
+            await _context.SaveChangesAsync();
+            return RedirectToAction("StudentEvents");
         }
 
         // GET: Events/Details/5
@@ -210,6 +243,8 @@ namespace FlashPoints.Controllers
                 newUser.FirstName = User.FindFirst(ClaimTypes.GivenName).Value;
                 newUser.LastName = User.FindFirst(ClaimTypes.Surname).Value;
                 newUser.Email = email;
+                newUser.PrizesRedeemed = new List<PrizeRedeemed>();
+                newUser.EventsAttended = new List<EventAttended>();
                 _context.User.Add(newUser);
                 _context.SaveChanges();
             }

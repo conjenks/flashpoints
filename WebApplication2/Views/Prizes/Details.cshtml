@@ -10,7 +10,7 @@
     <hr />
     <div class="row">
         <div class="col-lg-6">
-            <img src="~/images/prizes/@Model.ImagePath" class="img"/>
+            <img src="~/images/prizes/@Model.ImagePath" class="img" />
         </div>
         <div class="col-lg-6">
             <br />
@@ -31,9 +31,32 @@
                     @Html.DisplayFor(model => model.Location)
                 </dd>
             </dl>
+            @if (ViewBag.redeemed == false && ViewBag.redeemable == true)
+            {
+                <form asp-action="RedeemPrize" asp-route-id="@Model.ID">
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-success" value="Redeem Prize" />
+                    </div>
+                </form>
+            }
+            else if (ViewBag.redeemed == false && ViewBag.redeemable == false)
+            {
+                <br />
+                <p><strong>You have @ViewBag.userPoints points</strong></p>
+                <br />
+                <p>Attend more events to earn this prize!</p>
+            }
+            else
+            {
+                <br />
+                <p style="color:green"><strong> Redeemed ✓</strong></p>
+                <br />
+                <p> Go to @Model.Location to pick up your prize!</p>
+            }
+
         </div>
     </div>
-    <hr />
+    <br />
 
 </div>
 <div>

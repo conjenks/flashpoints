@@ -68,6 +68,8 @@ namespace FlashPoints.Controllers
                 newUser.FirstName = User.FindFirst(ClaimTypes.GivenName).Value;
                 newUser.LastName = User.FindFirst(ClaimTypes.Surname).Value;
                 newUser.Email = email;
+                newUser.PrizesRedeemed = new List<PrizeRedeemed>();
+                newUser.EventsAttended = new List<EventAttended>();
                 _context.User.Add(newUser);
                 _context.SaveChanges();
             }
