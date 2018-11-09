@@ -126,6 +126,26 @@ namespace FlashPoints.Controllers
 
         }
 
+        [Authorize(Policy = "Administrator")]
+        public IActionResult AdminEvent()
+        {
+            return View();
+        }
+
+        [Authorize(Policy = "Administrator")]
+        [HttpPost]
+        public async Task<IActionResult> AdminEvent(Event @event)
+        {
+            if (ModelState.IsValid)
+            {
+                @event.Approved = true;
+                _context.Add(@event);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Details), new { id = @event.ID });
+            }
+            return View(@event);
+        }
+
         // GET: Events/Create
         public IActionResult Create()
         {

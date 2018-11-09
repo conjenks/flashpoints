@@ -40,6 +40,15 @@ namespace FlashPoints.Controllers
             return View(mod);
         }
 
+        [Authorize(Policy = "Administrator")]
+        public async Task<IActionResult> ManagePrizes()
+        {
+            var prizes = await _context.Prize
+                .ToListAsync();
+
+            return View(prizes);
+        }
+
         // GET: Prizes/Details/5
         public async Task<IActionResult> Details(int? id)
         {

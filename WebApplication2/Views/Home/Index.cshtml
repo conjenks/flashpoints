@@ -9,11 +9,11 @@
 @if (ViewBag.isAdmin == "true")
 {
     <h3>Administrator Console</h3>
-    <a asp-controller="Events" asp-action="Create">Add Event to Calendar</a>
+    <a asp-controller="Events" asp-action="AdminEvent">Add Event to Calendar</a>
     <br />
     <a asp-controller="Events" asp-action="StudentEvents">Approve Student Event Requests</a>
     <br />
     <a asp-controller="Users" asp-action="Index">Manage Users</a>
     <br />
-    <a asp-controller="Prizes" asp-action="Index">Manage Prize Catalog</a>
+    <a asp-controller="Prizes" asp-action="ManagePrizes">Manage Prize Catalog</a>
 }

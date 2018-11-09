@@ -4,12 +4,14 @@
     ViewData["Title"] = "Index";
 }
 
-<h2>Prize Catalog</h2>
-<h5>Your current point balance: @Model.user.Points</h5>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<div class="row">
+    <div class="col-sm-6 center-block" style="float:none">
+        <br />
+        <h2>Prize Catalog</h2>
+        <h3>Your current point balance: <strong>@Model.user.Points</strong></h3>
+        <br />
+    </div>
+</div>
 
 @foreach (var item in Model.prizes)
 {
@@ -17,7 +19,8 @@
     try
     {
         rdm = Model.user.PrizesRedeemed.Where(u => u.User.Email == User.Identity.Name && u.PrizeID == item.ID).First();
-    } catch
+    }
+    catch
     {
         rdm = null;
     }
