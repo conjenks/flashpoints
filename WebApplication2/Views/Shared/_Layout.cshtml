@@ -13,9 +13,12 @@
             font-family: 'Signika', sans-serif;
         }
 
-        .carousel {
-            width: auto;
-            height: 360px;
+        body {
+            color: #14439b;
+        }
+
+        h1 h2 h3 h4 h5 h6 {
+            color: #14439b;
         }
 
         .img-responsive {
@@ -39,20 +42,48 @@
         .col-md-6 {
             text-align: center;
             image-orientation: inherit;
-            border-color: #00205B;
+            border-color: #14439b;
             border-style: solid;
             border-radius: 5px;
             padding-top: 5px;
             margin: 4px;
         }
 
-        .navbar-inverse {
-            color: #00205B;
+        .navbar-custom {
+            background-color: #14439b;
+            color: #14439b;
+            border-radius: 0;
         }
 
-        .navbar {
-            color: #00205B;
-        }
+            .navbar-custom .navbar-nav > li > a {
+                color: #d6c917;
+            }
+
+            .navbar-custom .navbar-nav > .active > a {
+                color: #ffffff;
+                background-color: transparent;
+            }
+
+                .navbar-custom .navbar-nav > li > a:hover,
+                .navbar-custom .navbar-nav > li > a:focus,
+                .navbar-custom .navbar-nav > .active > a:hover,
+                .navbar-custom .navbar-nav > .active > a:focus,
+                .navbar-custom .navbar-nav > .open > a {
+                    text-decoration: none;
+                    background-color: #14439b;
+                }
+
+            .navbar-custom .navbar-brand {
+                color: #d6c917;
+            }
+
+            .navbar-custom .navbar-toggle {
+                background-color: #d6c917;
+            }
+
+            .navbar-custom .icon-bar {
+                background-color: #14439b;
+            }
     </style>
 
     <environment include="Development">
@@ -69,7 +100,7 @@
 
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
+    <nav class="navbar navbar-custom navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
