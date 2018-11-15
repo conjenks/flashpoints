@@ -80,19 +80,36 @@ namespace FlashPoints.Controllers
         // GET: Users/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            AddUserIfNotExists(User.Identity.Name);
 
             var user = await _context.User
+                .Include(u => u.PrizesRedeemed)
+                .Include(u => u.EventsAttended)
                 .FirstOrDefaultAsync(m => m.UserID == id);
+
+            var vm = new UserProfileViewModel();
+            vm.User = user;
+            vm.Events = new List<Event>();
+            vm.Prizes = new List<Prize>();
+
+            foreach (EventAttended ev in user.EventsAttended)
+            {
+                var e = _context.Event.Where(eve => eve.ID == ev.EventID).First();
+                vm.Events.Add(e);
+            }
+
+            foreach (PrizeRedeemed prize in user.PrizesRedeemed)
+            {
+                var p = _context.Prize.Where(pr => pr.ID == prize.PrizeID).First();
+                vm.Prizes.Add(p);
+            }
+
             if (user == null)
             {
                 return NotFound();
             }
 
-            return View(user);
+            return View(vm);
         }
 
         // GET: Users/Me
@@ -101,14 +118,33 @@ namespace FlashPoints.Controllers
             AddUserIfNotExists(User.Identity.Name);
 
             var user = await _context.User
+                .Include(u => u.PrizesRedeemed)
+                .Include(u => u.EventsAttended)
                 .FirstOrDefaultAsync(m => m.Email == User.Identity.Name);
+
+            var vm = new UserProfileViewModel();
+            vm.User = user;
+            vm.Events = new List<Event>();
+            vm.Prizes = new List<Prize>();
+
+            foreach (EventAttended ev in user.EventsAttended)
+            {
+                var e = _context.Event.Where(eve => eve.ID == ev.EventID).First();
+                vm.Events.Add(e);
+            }
+
+            foreach (PrizeRedeemed prize in user.PrizesRedeemed)
+            {
+                var p = _context.Prize.Where(pr => pr.ID == prize.PrizeID).First();
+                vm.Prizes.Add(p);
+            }
 
             if (user == null)
             {
                 return NotFound();
             }
 
-            return View(user);
+            return View(vm);
         }
 
         // GET: Users/Create
@@ -156,18 +192,24 @@ namespace FlashPoints.Controllers
         [Authorize(Policy = "Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserID,Email,FirstName,LastName,IsAdmin,Points,EventsAttendedIDs,PrizesRedeemedIDs,EventsCreatedIDs")] User user)
+        public async Task<IActionResult> Edit(int id, User user)
         {
             if (id != user.UserID)
             {
                 return NotFound();
             }
 
+            var usr = _context.User.Where(u => u.UserID == id).First();
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(user);
+                    usr.UserID = user.UserID;
+                    usr.FirstName = user.FirstName;
+                    usr.LastName = user.LastName;
+                    usr.Points = user.Points;
+                    _context.Update(usr);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

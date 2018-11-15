@@ -1,13 +1,13 @@
-﻿@model FlashPoints.Models.User
+﻿@model FlashPoints.Models.UserProfileViewModel
 
 @{
     ViewData["Title"] = "Details";
 }
 
-<h1>@Model.FirstName @Model.LastName</h1>
+<h1>@Model.User.FirstName @Model.User.LastName</h1>
 
 <div>
-    @if (Model.IsAdmin) {
+    @if (Model.User.IsAdmin) {
         <h4>Administrator</h4> 
     } else
     {
@@ -16,32 +16,57 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Email)
+            @Html.DisplayNameFor(model => model.User.Email)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Email)
+            @Html.DisplayFor(model => model.User.Email)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Points)
+            @Html.DisplayNameFor(model => model.User.Points)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Points)
+            @Html.DisplayFor(model => model.User.Points)
         </dd>
+        <br />
+        <hr />
         <dt>
             Events Attended
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.EventsAttendedIDs)
+            @if (Model.Events.Count() == 0)
+            {
+                <p>None yet!</p>
+            }
+            else
+            {
+                @foreach (Event ev in Model.Events)
+                {
+                    <p><a asp-controller="Events" asp-action="Details" asp-route-id="@ev.ID">@ev.Title</a></p>
+                    <br />
+                }
+            }
         </dd>
+        <hr />
         <dt>
             Prizes Redeemed
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.PrizesRedeemedIDs)
+            @if (Model.Events.Count() == 0)
+            {
+                <p>None yet!</p>
+            }
+            else
+            {
+                @foreach (Prize prize in Model.Prizes)
+                {
+                    <p><a asp-controller="Prizes" asp-action="Details" asp-route-id="@prize.ID">@prize.Title</a></p>
+                    <br />
+                }
+            }
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.UserID">Manage User</a> |
+    <a asp-action="Edit" asp-route-id="@Model.User.UserID">Manage User</a> |
     <a asp-action="Index">Back to List</a>
 </div>

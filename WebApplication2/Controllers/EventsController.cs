@@ -48,6 +48,7 @@ namespace FlashPoints.Controllers
             return View(events);
         }
 
+        [Authorize(Policy = "Administrator")]
         public async Task<IActionResult> ApproveEvent(int? id)
         {
             if (id == null)
@@ -108,22 +109,29 @@ namespace FlashPoints.Controllers
                 return NotFound();
             }
 
-            string qrcode = @event.Title + @event.Location + @event.ID;
+            var user = _context.User.Where(u => u.Email == User.Identity.Name).First();
 
-            using (MemoryStream ms = new MemoryStream())
+            if (@event.Creator == User.Identity.Name || user.IsAdmin)
             {
-                QRCodeGenerator qrGenerator = new QRCodeGenerator();
-                QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrcode, QRCodeGenerator.ECCLevel.Q);
-                QRCode qrCode = new QRCode(qrCodeData);
-                using (Bitmap bitMap = qrCode.GetGraphic(20))
+                string qrcode = @event.Title;
+
+                using (MemoryStream ms = new MemoryStream())
                 {
-                    bitMap.Save(ms, ImageFormat.Png);
-                    ViewBag.QRCodeImage = "data:image/png;base64," + Convert.ToBase64String(ms.ToArray());
+                    QRCodeGenerator qrGenerator = new QRCodeGenerator();
+                    QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrcode, QRCodeGenerator.ECCLevel.Q);
+                    QRCode qrCode = new QRCode(qrCodeData);
+                    using (Bitmap bitMap = qrCode.GetGraphic(20))
+                    {
+                        bitMap.Save(ms, ImageFormat.Png);
+                        ViewBag.QRCodeImage = "data:image/png;base64," + Convert.ToBase64String(ms.ToArray());
+                    }
                 }
+
+                return View(@event);
+            } else
+            {
+                return View("AccessDenied");
             }
-
-            return View(@event);
-
         }
 
         [Authorize(Policy = "Administrator")]
@@ -163,6 +171,12 @@ namespace FlashPoints.Controllers
             {
                 _context.Add(@event);
                 await _context.SaveChangesAsync();
+
+                string subject = "A new FlashPoints Event Request is waiting to be approved!";
+                string body = $"<a href='https://flashpoints-web-app.azurewebsites.net/Events/Details/{@event.ID}'>Click here to view the request.</ a ><br /> <br /> <br />";
+                EmailSender.SendMail("flashpointscoordinators@gmail.com", subject, body);
+
+
                 return RedirectToAction(nameof(Index));
             }
             return View(@event);

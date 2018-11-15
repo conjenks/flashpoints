@@ -35,6 +35,7 @@ namespace FlashPoints.Controllers
 
             mod.prizes = await _context.Prize
                 .Include(p => p.PrizesRedeemed)
+                .OrderBy(p => p.PointPrice)
                 .ToListAsync();
 
             return View(mod);
