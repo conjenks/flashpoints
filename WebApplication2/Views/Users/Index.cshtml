@@ -50,15 +50,6 @@ else
             <th>
                 @Html.DisplayNameFor(model => model.Points)
             </th>
-            <th>
-                Events Attended
-            </th>
-            <th>
-                Prizes Redeemed
-            </th>
-            <th>
-                Events Created
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -73,15 +64,6 @@ else
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Points)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EventsAttendedIDs)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PrizesRedeemedIDs)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EventsCreatedIDs)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.UserID">Edit</a> |

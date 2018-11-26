@@ -31,7 +31,15 @@ namespace FlashPoints.Controllers
         public async Task<IActionResult> Index()
         {
             AddUserIfNotExists(User.Identity.Name);
-            var events = await _context.Event.Where(e => e.Approved == true)
+            var events = await _context.Event.Where(e => e.Approved == true && e.EndDateTime > DateTime.Now)
+                .OrderBy(e => e.StartDateTime)
+                .ToListAsync();
+            return View(events);
+        }
+
+        public async Task<IActionResult> PastEvents()
+        {
+            var events = await _context.Event.Where(e => e.Approved == true && e.EndDateTime < DateTime.Now)
                 .OrderBy(e => e.StartDateTime)
                 .ToListAsync();
             return View(events);
