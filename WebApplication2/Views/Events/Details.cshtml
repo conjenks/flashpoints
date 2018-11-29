@@ -8,7 +8,7 @@
 
 <div>
     <h4>Details</h4>
-    <hr />
+    <hr style="border: 1px solid #f0b310; margin-right:34px">
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.Location)
@@ -43,7 +43,7 @@
         </dd>
 
     </dl>
-    <hr />
+    <hr style="border: 1px solid #f0b310; margin-right:34px">
     @if (ViewBag.isAdmin == true || Model.Creator == User.Identity.Name)
     {
         <h4>Administrator Options</h4>

@@ -5,10 +5,11 @@
 }
 
 <div class="row">
-    <div class="col-sm-6 center-block" style="float:none">
+    <div class="col-sm-6 left-block" style="float:none">
         <br />
         <h2>Prize Catalog</h2>
         <h3>Your current point balance: <strong>@Model.user.Points</strong></h3>
+        @*<p>Use your points to redeem a prize</p>*@
         <br />
     </div>
 </div>
@@ -25,7 +26,7 @@
         rdm = null;
     }
     <div class="row">
-        <div class="col-md-6 center-block" style="float:none">
+        <div class="col-md-6 left-block" style="float:none">
             <h3>@item.Title</h3>
             <a asp-action="Details" asp-route-id="@item.ID" class="text-center"><img src="~/images/prizes/@item.ImagePath" class="center-block img-responsive" /></a>
             <br />

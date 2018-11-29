@@ -1,14 +1,12 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-<br />
-<br />
-<p>Select an option from above.</p>
-<br />
 
 @if (ViewBag.isAdmin == "true")
 {
-    <h3>Administrator Console</h3>
+    <br />
+    <h2>Administrator Console</h2>
+    @*<p>Select from Administrator options</p>*@
     <a asp-controller="Events" asp-action="AdminEvent">Add Event to Calendar</a>
     <br />
     <a asp-controller="Events" asp-action="StudentEvents">Approve Student Event Requests</a>
